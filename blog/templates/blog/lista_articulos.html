@@ -1,0 +1,6 @@
+<h1>Artículos del Blog</h1>
+<ul>
+{% for articulo in articulos %}
+    <li>{{ articulo.titulo }} - {{ articulo.fecha_publicacion }}</li>
+{% endfor %}
+</ul>
