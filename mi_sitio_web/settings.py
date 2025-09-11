@@ -22,26 +22,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-### IMPORTANTE ###
-# La SECRET_KEY se obtendrá de las variables de entorno de Render.
+### IMPORTANTE: Asegúrate de que esta variable de entorno exista en Render ###
 # Si no está definida en el entorno (ej. desarrollo local), usará un valor por defecto.
-# ¡En Render, asegúrate de tener una variable de entorno llamada SECRET_KEY con un valor MUY SEGURO!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu_clave_secreta_local_muy_larga_y_unica_si_corres_sin_env')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-### IMPORTANTE ###
-# DEBUG será False en Render. Se controla con una variable de entorno.
+### IMPORTANTE: DEBUG será False en Render. Se controla con una variable de entorno. ###
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 
 # ALLOWED_HOSTS para tu aplicación en Render
-### IMPORTANTE ###
-# Añade tu dominio de Render EXACTO aquí. '.onrender.com' es un comodín.
+### IMPORTANTE: Añade tu dominio de Render EXACTO aquí. '.onrender.com' es un comodín. ###
 ALLOWED_HOSTS = [
     '127.0.0.1',                # Para desarrollo local
     'localhost',                # Para desarrollo local
-    'agusp80.pythonanywhere.com', # Si aún usas PythonAnywhere
+    'agusp80.pythonanywhere.com', # Si aún usas PythonAnywhere (si aplica)
     '.onrender.com',            # Comodín para cualquier subdominio de Render
     'mi-blog-django-agus.onrender.com', # ¡Tu URL específica de Render!
 ]
@@ -72,8 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-### IMPORTANTE ###
-# Asegúrate de que 'mi_sitio_web' sea el nombre de tu proyecto principal.
+### IMPORTANTE: Asegúrate de que 'mi_sitio_web' sea el nombre de tu proyecto principal. ###
 ROOT_URLCONF = 'mi_sitio_web.urls'
 
 TEMPLATES = [
@@ -92,16 +87,14 @@ TEMPLATES = [
     },
 ]
 
-### IMPORTANTE ###
-# Asegúrate de que 'mi_sitio_web' sea el nombre de tu proyecto principal.
+### IMPORTANTE: Asegúrate de que 'mi_sitio_web' sea el nombre de tu proyecto principal. ###
 WSGI_APPLICATION = 'mi_sitio_web.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-### IMPORTANTE ###
-# Configuración de la base de datos PostgreSQL de Supabase.
+### IMPORTANTE: Configuración de la base de datos PostgreSQL de Supabase. ###
 # La DATABASE_URL se pasa como variable de entorno en Render.
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
@@ -109,7 +102,8 @@ if DATABASE_URL:
     db_url = urlparse(DATABASE_URL)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
+            # ¡CRÍTICO! Cambiado para forzar el backend compatible con psycopg
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': db_url.path[1:],
             'USER': db_url.username,
             'PASSWORD': db_url.password,
@@ -158,8 +152,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-### IMPORTANTE ###
-# Configuración para servir archivos estáticos con Whitenoise en Render.
+### IMPORTANTE: Configuración para servir archivos estáticos con Whitenoise en Render. ###
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = []
