@@ -27,13 +27,15 @@ SECRET_KEY = 'django-insecure-tu_clave_secreta_aqui' # Deja la que ya tienes o g
 # Puedes usar una variable de entorno para cambiarlo en PythonAnywhere si lo deseas.
 # Por ahora, para pruebas iniciales, podríamos dejarlo True para ver errores,
 # pero LUEGO debe ser False para despliegue real.
-DEBUG = True # O False, si quieres empezar directamente con producción.
+DEBUG = False # O True, si quieres empezar directamente con producción.
 
 # Define los hosts permitidos para tu aplicación. ¡MUY IMPORTANTE para PythonAnywhere!
 ALLOWED_HOSTS = [
-    '127.0.0.1',                # Para desarrollo local
-    'localhost',                # Para desarrollo local
-    'agusp80.pythonanywhere.com', # ¡Tu dominio en PythonAnywhere!
+    '127.0.0.1',
+    'localhost',
+    'agusp80.pythonanywhere.com', # Mantener si quieres que siga funcionando
+    '.onrender.com', # Ya la habíamos puesto, pero no incluía el subdominio específico.
+    'mi-blog-django-agus.onrender.com', # ¡Añade esta línea exacta!
 ]
 
 # Application definition
