@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
-from urllib.parse import urlparse # Necesario para parsear la URL de la base de datos
+import dj_database_url # ¡Nueva importación para Railway!
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,24 +22,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-### IMPORTANTE: Asegúrate de que esta variable de entorno exista en Render ###
+### IMPORTANTE: Asegúrate de que esta variable de entorno exista en Railway (generada o pegada). ###
 # Si no está definida en el entorno (ej. desarrollo local), usará un valor por defecto.
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu_clave_secreta_local_muy_larga_y_unica_si_corres_sin_env')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-### IMPORTANTE: DEBUG será False en Render. Se controla con una variable de entorno. ###
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+### IMPORTANTE: DEBUG será False en Railway (configurado en las variables de entorno). ###
+# Para desarrollo local, puedes dejarlo en True.
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True' # Esto permite controlarlo con DJANGO_DEBUG=False en Railway
+# O, de forma más simple, si no quieres una variable extra, puedes usar:
+# DEBUG = (os.environ.get('RAILWAY_ENVIRONMENT') is None) # True si no estás en Railway, False si sí.
+# Pero lo dejamos como está, es flexible.
 
 
-# ALLOWED_HOSTS para tu aplicación en Render
-### IMPORTANTE: Añade tu dominio de Render EXACTO aquí. '.onrender.com' es un comodín. ###
+# ALLOWED_HOSTS para tu aplicación en Railway
+### IMPORTANTE: Añade tus dominios de Railway y cualquier otro si los tienes. ###
 ALLOWED_HOSTS = [
     '127.0.0.1',                # Para desarrollo local
     'localhost',                # Para desarrollo local
-    'agusp80.pythonanywhere.com', # Si aún usas PythonAnywhere (si aplica)
-    '.onrender.com',            # Comodín para cualquier subdominio de Render
-    'mi-blog-django-agus.onrender.com', # ¡Tu URL específica de Render!
+    '.railway.app',             # Comodín para cualquier subdominio de Railway
+    # Si sabes tu URL final de Railway, puedes añadirla aquí también:
+    # 'tu-proyecto.up.railway.app',
 ]
 
 
@@ -51,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', # ¡CRÍTICO para servir estáticos!
+    'django.contrib.staticfiles',
     # Tus aplicaciones aquí:
     'blog', # Ejemplo: Tu aplicación de blog
     # ... otras apps si tienes ...
@@ -59,7 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # ¡CRÍTICO! DEBE IR AQUÍ.
+    'whitenoise.middleware.WhiteNoiseMiddleware', # ¡CRÍTICO! DEBE IR AQUÍ para Whitenoise.
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -94,31 +98,15 @@ WSGI_APPLICATION = 'mi_sitio_web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-### IMPORTANTE: Configuración de la base de datos PostgreSQL de Supabase. ###
-# La DATABASE_URL se pasa como variable de entorno en Render.
-DATABASE_URL = os.environ.get('DATABASE_URL')
-
-if DATABASE_URL:
-    db_url = urlparse(DATABASE_URL)
-    DATABASES = {
-        'default': {
-            # ¡CRÍTICO! Cambiado para forzar el backend compatible con psycopg
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': db_url.path[1:],
-            'USER': db_url.username,
-            'PASSWORD': db_url.password,
-            'HOST': db_url.hostname,
-            'PORT': db_url.port,
-        }
-    }
-else:
-    # Fallback para desarrollo local (SQLite) si DATABASE_URL no está definida.
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+### ¡NUEVA CONFIGURACIÓN DE BASE DE DATOS PARA RAILWAY CON DJ-DATABASE-URL! ###
+DATABASES = {
+    'default': dj_database_url.config(
+        # 'default' si DATABASE_URL no está definida (para desarrollo local con SQLite)
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600, # Mantener conexiones abiertas para eficiencia
+        conn_health_checks=True, # Verificar salud de la conexión
+    )
+}
 
 
 # Password validation
@@ -143,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'es-ar' # Configurado para Argentina
+LANGUAGE_CODE = 'es-ar' # Configurado para Argentina, Buenos Aires
 TIME_ZONE = 'America/Argentina/Buenos_Aires' # ¡Zona horaria de Buenos Aires!
 USE_I18N = True
 USE_TZ = True
@@ -152,7 +140,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-### IMPORTANTE: Configuración para servir archivos estáticos con Whitenoise en Render. ###
+### IMPORTANTE: Configuración para servir archivos estáticos con Whitenoise en Railway. ###
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = []

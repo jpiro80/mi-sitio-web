@@ -1,0 +1,3 @@
+x3VdYZ7x2aOkvEXq
+postgresql://postgres:x3VdYZ7x2aOkvEXq@db.xyz.supabase.co:5432/postgres
+x3VdYZ7x2aOkvEXqxVdYZx2OkEX

@@ -6,4 +6,7 @@ sentry-sdk
 djangorestframework-simplejwt
 gunicorn
 whitenoise
-psycopg-binary
+psycopg2-binary==2.9.9  # Ojo: Railway lo pidió, pero para un server EC2 donde instalarás PostgreSQL localmente,
+                      # podrías usar 'psycopg2' a secas o incluso 'psycopg'.
+                      # Por ahora, dejemos psycopg2-binary, ya que cubre ambos.
+dj-database-url==2.1.0 # ¡CRÍTICO para dj_database_url!
