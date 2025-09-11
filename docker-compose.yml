@@ -1,0 +1,19 @@
+version: '3.8' # Usaremos una versión ligeramente más moderna
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - DOCKER_REDIS_HOST=redis # Variable para que Django encuentre Redis
+      - DOCKER_REDIS_PORT=6379 # Variable para que Django encuentre Redis
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379" # Exponemos el puerto de Redis por si necesitas conectarte directamente
