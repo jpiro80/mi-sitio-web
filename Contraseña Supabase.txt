@@ -1,3 +1,4 @@
 x3VdYZ7x2aOkvEXq
 postgresql://postgres:x3VdYZ7x2aOkvEXq@db.xyz.supabase.co:5432/postgres
+6XIAmuLfkrme0tAifArdgp7BNv9kbzeGpWFplJehAYjbRRnNm-RXBMfGIzBp3DxedXQ
 x3VdYZ7x2aOkvEXqxVdYZx2OkEX
